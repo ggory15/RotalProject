@@ -15,6 +15,7 @@
 #include <rclcpp/node_options.hpp>
 
 #include <angles/angles.h>
+#include <std_msgs/msg/float32.hpp>
 #include <nav_msgs/msg/odometry.h>
 #include <nav_msgs/msg/occupancy_grid.h>
 #include <sensor_msgs/msg/laser_scan.hpp>
@@ -154,6 +155,9 @@ public:
 
 		this->declare_parameter<std::string>("amcl_pose", "amcl_pose");
 		this->get_parameter("amcl_pose", m_amcl_pose);
+		
+		this->declare_parameter<std::string>("amcl_bestscore", "amcl_bestscore");
+		this->get_parameter("amcl_bestscore", m_amcl_bestscore);
 
     	this->declare_parameter<bool>("broadcast_info", false);
     	this->get_parameter("broadcast_info", m_broadcast_info);
@@ -170,6 +174,7 @@ public:
 		m_pub_loc_pose = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(m_amcl_pose, 10);
 		m_pub_loc_pose_2 = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(m_map_pose, 10);
 		m_pub_pose_array = this->create_publisher<geometry_msgs::msg::PoseArray>(m_particle_cloud, 10);
+		m_pub_best_score = this->create_publisher<std_msgs::msg::Float32>(m_amcl_bestscore, 10);
 
 		m_loc_update_timer = create_wall_timer(
 								std::chrono::milliseconds(m_loc_update_time_ms), std::bind(&KJJLocalizationNode::loc_update, this));
@@ -478,9 +483,13 @@ protected:
 				loc_pose.pose.covariance[j_ * 6 + i_] = var_xyw(i, j);
 			}
 		}
+		
+		std_msgs::msg::Float32 bestscore_msg;
+		bestscore_msg.data = best_score;
 		m_pub_loc_pose->publish(loc_pose);
 		m_pub_loc_pose_2->publish(loc_pose);
-
+		m_pub_best_score->publish(bestscore_msg);
+        
 		// publish visualization
 		m_pub_pose_array->publish(pose_array);
 
@@ -722,6 +731,7 @@ private:
 	rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr m_pub_loc_pose;
 	rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr m_pub_loc_pose_2;
 	rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr m_pub_pose_array;
+	rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr m_pub_best_score;
 
 	rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr m_sub_map_topic;
 	rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr m_sub_scan_topic;
@@ -740,6 +750,7 @@ private:
 	std::string m_map_pose;
 	std::string m_particle_cloud;
 	std::string m_amcl_pose;
+	std::string m_amcl_bestscore;
 	std::string m_ns = "";
 
 
