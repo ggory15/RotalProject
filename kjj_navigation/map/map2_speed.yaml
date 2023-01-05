@@ -1,0 +1,7 @@
+image: map2_speed.pgm
+mode: scale
+resolution: 0.01
+origin: [-6.95, -21.7, 0]
+negate: 0
+occupied_thresh: 1.0
+free_thresh: 0.0

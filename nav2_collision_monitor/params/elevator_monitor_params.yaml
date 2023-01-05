@@ -1,0 +1,42 @@
+elevator_monitor:
+  ros__parameters:
+    use_sim_time: True
+    base_frame_id: "map"
+    odom_frame_id: "odom"
+    cmd_vel_in_topic: "cmd_vel_raw2"
+    cmd_vel_out_topic: "cmd_vel_nav"
+    transform_tolerance: 0.5
+    source_timeout: 5.0
+    stop_pub_timeout: 2.0
+    # Polygons represent zone around the robot for "stop" and "slowdown" action types,
+    # and robot footprint for "approach" action type.
+    # Footprint could be "polygon" type with dynamically set footprint from footprint_topic
+    # or "circle" type with static footprint set by radius. "footprint_topic" parameter
+    # to be ignored in circular case.
+    polygons: ["ElevatorStop", "FootprintApproach"]
+    ElevatorStop:
+      type: "polygon"
+      points: [3.2, 1.0, 3.2, -1.0, 2.8, -1.0, 2.8, 1.0]
+      action_type: "stop"
+      max_points: 10
+      visualize: True
+      activate: True
+      polygon_pub_topic: "elevator_stop"
+    FootprintApproach:
+      type: "polygon"
+      action_type: "approach"
+      footprint_topic: "/local_costmap/published_footprint"
+      time_before_collision: 2.0
+      simulation_time_step: 0.1
+      max_points: 5
+      activate: False
+      visualize: False
+    observation_sources: ["scan"]
+    scan:
+      type: "scan"
+      topic: "/scan"
+    pointcloud:
+      type: "pointcloud"
+      topic: "/intel_realsense_r200_depth/points"
+      min_height: 0.1
+      max_height: 0.5

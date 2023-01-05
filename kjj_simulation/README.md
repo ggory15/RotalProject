@@ -1,0 +1,1 @@
+sudo apt install xterm ros-humble-nav2*

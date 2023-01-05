@@ -1,0 +1,8 @@
+image: neo_workshop_speed.pgm
+resolution: 0.050000
+origin: [-100.000000, -100.000000, 0.000000]
+negate: 0
+mode: scale
+occupied_thresh: 1.0
+free_thresh: 0.0
+

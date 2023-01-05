@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot name="GC_AMR">
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="1.2 0.7436 1.362"/>
+            </geometry>
+            <origin xyz="0 0 0"/>
+        </visual>
+    </link>
+
+    <link name="base_footprint"/>
+    <link name="scan1"/>
+    <link name="scan2"/>
+    
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_footprint"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="scan1" type="fixed">
+        <parent link="base_link"/>
+        <child link="scan1"/>
+        <origin xyz="0.4925314 0.267477 0.25" rpy="3.141592 0.0 0.785398"/>
+    </joint>
+
+    <joint name="scan2" type="fixed">
+        <parent link="base_link"/>
+        <child link="scan2"/>
+        <origin xyz="-0.4925314 -0.267477 0.25" rpy="3.141592 0.0 3.92699"/>
+    </joint>
+</robot>
