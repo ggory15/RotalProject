@@ -22,7 +22,7 @@ find_package(rclpy REQUIRED)
 ament_python_install_package(${PROJECT_NAME})
  
 install(DIRECTORY 
-  include launch config map rviz
+  launch config map rviz
   DESTINATION share/${PROJECT_NAME}
 )
 
